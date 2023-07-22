@@ -24,7 +24,6 @@ import {
   ChevronRightIcon,
 } from "@chakra-ui/icons"
 import { Link as LinkRouter } from "react-router-dom"
-import Home from "../pages/Home"
 
 export default function NavBar() {
   const { isOpen, onToggle } = useDisclosure()
@@ -107,7 +106,6 @@ export default function NavBar() {
       <Collapse in={isOpen} animateOpacity>
         <MobileNav />
       </Collapse>
-      <Home />
     </Container>
   )
 }
