@@ -24,7 +24,7 @@ import {
   ChevronRightIcon,
 } from "@chakra-ui/icons"
 import { Link as LinkRouter } from "react-router-dom"
-
+import img from "../assets/logo-no-background.svg"
 export default function NavBar() {
   const { isOpen, onToggle } = useDisclosure()
 
@@ -56,12 +56,7 @@ export default function NavBar() {
         </Flex>
         <Flex flex={{ base: 1 }} justify={{ base: "center", md: "start" }}>
           <Link as={LinkRouter} to='/'>
-            <Image
-              src='../../public/logo-no-background.svg'
-              width='100px'
-              objectFit='cover'
-              alt='logo'
-            />
+            <Image src={img} width='100px' objectFit='cover' alt='logo' />
           </Link>
           <Flex display={{ base: "none", md: "flex" }} ml={10}>
             <DesktopNav />
