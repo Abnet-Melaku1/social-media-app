@@ -46,7 +46,7 @@ const LinkItems = [
 
 import ProfileCard from "./ProfileCard"
 import Feed from "../pages/Feed"
-
+import logo from "../assets/logo-no-background.svg"
 import Suggestion from "../pages/Suggestion"
 export default function SideBar({ children }) {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -109,7 +109,7 @@ const SidebarContent = ({ onClose, ...rest }) => {
       h='full'
       {...rest}>
       <Flex h='20' alignItems='center' mx='8' justifyContent='space-between'>
-        <Image src='../../public/logo-no-background.svg' w={"120px"} />
+        <Image src={logo} w={"120px"} />
         <CloseButton display={{ base: "flex", md: "none" }} onClick={onClose} />
       </Flex>
       <ProfileCard />
