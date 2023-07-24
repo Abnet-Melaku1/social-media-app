@@ -33,22 +33,23 @@ import { FaUserFriends } from "react-icons/fa"
 import { CgProfile } from "react-icons/cg"
 import { AiOutlineInteraction } from "react-icons/ai"
 import { BsBell } from "react-icons/bs"
-
+import { Link as LinkRouter } from "react-router-dom"
 const LinkItems = [
-  { name: "Home", icon: FiHome },
-  { name: "Friends", icon: FaUserFriends },
-  { name: "Notifications", icon: BsBell },
+  { name: "Home", icon: FiHome, path: "/" },
+  { name: "Friends", icon: FaUserFriends, path: "/friends" },
+  { name: "Notifications", icon: BsBell, path: "/notifications" },
 
-  { name: "Interaction", icon: AiOutlineInteraction },
-  { name: "Profile", icon: CgProfile },
-  { name: "Setting", icon: FiSettings },
+  { name: "Interaction", icon: AiOutlineInteraction, path: "/interaction" },
+  { name: "Profile", icon: CgProfile, path: "/profile" },
+  { name: "Setting", icon: FiSettings, path: "/setting" },
 ]
 
 import ProfileCard from "./ProfileCard"
-import Feed from "../pages/Feed"
+
 import logo from "../assets/logo-no-background.svg"
 import Suggestion from "../pages/Suggestion"
-export default function SideBar({ children }) {
+
+export const SideBar = ({ children }) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   return (
     <Box minH='100vh' bg={useColorModeValue("gray.100", "gray.900")}>
@@ -76,7 +77,7 @@ export default function SideBar({ children }) {
         ml={{ base: 0, md: 60 }}
         justify={"space-around"}>
         <Box p='4' w={{ base: "full", md: "60%" }} mx={"auto"}>
-          <Feed />
+          {children}
         </Box>
         <Box
           as='div'
@@ -114,7 +115,7 @@ const SidebarContent = ({ onClose, ...rest }) => {
       </Flex>
       <ProfileCard />
       {LinkItems.map((link) => (
-        <NavItem key={link.name} icon={link.icon}>
+        <NavItem key={link.name} icon={link.icon} path={link.path}>
           {link.name}
         </NavItem>
       ))}
@@ -122,10 +123,11 @@ const SidebarContent = ({ onClose, ...rest }) => {
   )
 }
 
-const NavItem = ({ icon, children, ...rest }) => {
+const NavItem = ({ icon, children, path, ...rest }) => {
   return (
     <Link
-      href='#'
+      as={LinkRouter}
+      to={path}
       style={{ textDecoration: "none" }}
       _focus={{ boxShadow: "none" }}>
       <Flex
