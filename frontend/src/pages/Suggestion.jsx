@@ -3,7 +3,7 @@ import { FindFriend } from "../components/FindFriend"
 
 const Suggestion = () => {
   return (
-    <Box bg='white' p={4} w='full' zIndex={-1}>
+    <Box bg='white' p={4} w='full' zIndex={-1} overflowY='scroll'>
       <FindFriend />
       <FindFriend />
       <FindFriend />

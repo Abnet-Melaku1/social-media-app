@@ -4,6 +4,6 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: rgba(70, 70, 229, 0.9) !important;
+  background-color: rgba(70, 70, 229, 0.7) !important;
   border-radius: 25px !important;
 }

@@ -52,7 +52,7 @@ import Suggestion from "../pages/Suggestion"
 export const SideBar = ({ children }) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   return (
-    <Box minH='100vh' bg={useColorModeValue("gray.100", "gray.900")}>
+    <Box minH='100vh' bg={useColorModeValue("gray.100", "gray.200")}>
       <SidebarContent
         onClose={() => onClose}
         display={{ base: "none", md: "block" }}
@@ -161,11 +161,12 @@ const NavItem = ({ icon, children, path, ...rest }) => {
 const MobileNav = ({ onOpen, ...rest }) => {
   return (
     <Flex
+      zIndex={2}
       ml={{ base: 0, md: 60 }}
       px={{ base: 4, md: 4 }}
       height='20'
       alignItems='center'
-      bg={useColorModeValue("white", "gray.900")}
+      bg={useColorModeValue("white", "gray.400")}
       borderBottomWidth='1px'
       position={"sticky"}
       top={0}
@@ -183,7 +184,7 @@ const MobileNav = ({ onOpen, ...rest }) => {
 
       <Image
         display={{ base: "flex", md: "none" }}
-        src='../../public/logo-no-background.svg'
+        src='/logo-no-background.svg'
         w={"90px"}
       />
 

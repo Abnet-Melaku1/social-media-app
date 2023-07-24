@@ -7,13 +7,14 @@ import SignIn from "./pages/SignIn"
 // import SideBar from "./components/SideBar"
 import Feed from "./pages/Feed"
 import Profile from "./pages/Profile"
-
+import "./customScrollbar.css"
+import Account from "./pages/Account"
 function App() {
   const [user, setUser] = React.useState(true)
   return (
     <>
       <Router>
-        {user && <NavBar />}
+        {!user && <NavBar />}
         <Routes>
           <Route path='/' element={<Feed />} />
         </Routes>
@@ -22,6 +23,9 @@ function App() {
         </Routes>
         <Routes>
           <Route path='/profile' element={<Profile />} />
+        </Routes>
+        <Routes>
+          <Route path='/setting' element={<Account />} />
         </Routes>
 
         <Routes>
