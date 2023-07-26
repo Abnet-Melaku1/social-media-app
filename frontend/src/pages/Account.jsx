@@ -31,7 +31,7 @@ export const Page = () => {
   return (
     <Flex
       py={6}
-      direction={{ sm: "column" }}
+      direction={{ base: "column" }}
       alignItems='center'
       gap='15px'
       width='full'
@@ -117,14 +117,14 @@ export const Page = () => {
             flex={{ base: 0.5 }}
             fontSize={"sm"}
             rounded={"md"}
-            bg={"brand.400"}
+            bg={"brand.500"}
             color={"white"}
             boxShadow={"md"}
             _hover={{
-              bg: "brand.500",
+              bg: "brand.600",
             }}
             _focus={{
-              bg: "brand.500",
+              bg: "brand.600",
             }}>
             Upload Profile
           </Button>
@@ -141,7 +141,7 @@ export const Page = () => {
             flex={{ base: 0.5 }}
             fontSize={"sm"}
             rounded={"md"}
-            bg={"red.300"}
+            bg={"red.400"}
             color={"white"}
             boxShadow={"md"}
             _hover={{
@@ -193,14 +193,14 @@ export const Page = () => {
             flex={1}
             fontSize={"sm"}
             rounded={"md"}
-            bg={"brand.400"}
+            bg={"brand.500"}
             color={"white"}
             boxShadow={"md"}
             _hover={{
-              bg: "brand.500",
+              bg: "brand.600",
             }}
             _focus={{
-              bg: "blue.500",
+              bg: "blue.600",
             }}>
             Update Account
           </Button>
