@@ -5,8 +5,10 @@ import {
   Center,
   useColorModeValue,
 } from "@chakra-ui/react"
+import { useSelector } from "react-redux"
 
 export default function ProfileCard() {
+  const { user } = useSelector((state) => state.auth)
   return (
     <Center py={0}>
       <Box
@@ -37,7 +39,7 @@ export default function ProfileCard() {
           }}
         />
         <Heading fontSize={"2xl"} fontFamily={"body"}>
-          Hewan
+          {user?.firstName} {user?.lastName}
         </Heading>
       </Box>
     </Center>

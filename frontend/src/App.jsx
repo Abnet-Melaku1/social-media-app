@@ -9,17 +9,27 @@ import Feed from "./pages/Feed"
 import Profile from "./pages/Profile"
 import "./customScrollbar.css"
 import Account from "./pages/Account"
+import { ToastContainer } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
+import { useSelector, useDispatch } from "react-redux"
+
 function App() {
-  const [user, setUser] = React.useState(true)
+  const { user } = useSelector((state) => state.auth)
   return (
     <>
       <Router>
         {!user && <NavBar />}
         <Routes>
-          <Route path='/' element={<Feed />} />
+          <Route path='/' element={<Home />} />
+        </Routes>
+        <Routes>
+          <Route path='/feed' element={<Feed />} />
         </Routes>
         <Routes>
           <Route path='/signup' element={<SignUp />} />
+        </Routes>
+        <Routes>
+          <Route path='/signin' element={<SignIn />} />
         </Routes>
         <Routes>
           <Route path='/profile' element={<Profile />} />
@@ -32,6 +42,7 @@ function App() {
           <Route path='/signin' element={<SignIn />} />
         </Routes>
       </Router>
+      <ToastContainer />
     </>
   )
 }

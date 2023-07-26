@@ -33,9 +33,9 @@ import { FaUserFriends } from "react-icons/fa"
 import { CgProfile } from "react-icons/cg"
 import { AiOutlineInteraction } from "react-icons/ai"
 import { BsBell } from "react-icons/bs"
-import { Link as LinkRouter } from "react-router-dom"
+import { Link as LinkRouter, useNavigate } from "react-router-dom"
 const LinkItems = [
-  { name: "Home", icon: FiHome, path: "/" },
+  { name: "Home", icon: FiHome, path: "/feed" },
   { name: "Friends", icon: FaUserFriends, path: "/friends" },
   { name: "Notifications", icon: BsBell, path: "/notifications" },
 
@@ -45,12 +45,20 @@ const LinkItems = [
 ]
 
 import ProfileCard from "./ProfileCard"
-
+import { logout, reset } from "../features/auth/authSlice"
 import logo from "../assets/logo-no-background.svg"
 import Suggestion from "../pages/Suggestion"
-
+import { useDispatch, useSelector } from "react-redux"
 export const SideBar = ({ children }) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const { user } = useSelector((state) => state.auth)
+  const onLogout = () => {
+    dispatch(logout())
+    dispatch(reset())
+    navigate("/")
+  }
   return (
     <Box minH='100vh' bg={useColorModeValue("gray.100", "gray.200")}>
       <SidebarContent
@@ -159,6 +167,14 @@ const NavItem = ({ icon, children, path, ...rest }) => {
 }
 
 const MobileNav = ({ onOpen, ...rest }) => {
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const { user } = useSelector((state) => state.auth)
+  const onLogout = () => {
+    dispatch(logout())
+    dispatch(reset())
+    navigate("/")
+  }
   return (
     <Flex
       zIndex={2}
@@ -207,7 +223,9 @@ const MobileNav = ({ onOpen, ...rest }) => {
                   alignItems='flex-start'
                   spacing='1px'
                   ml='2'>
-                  <Text fontSize='sm'>Hewan</Text>
+                  <Text fontSize='sm'>
+                    {user?.firstName} {user?.lastName}
+                  </Text>
                 </VStack>
                 <Box display={{ base: "none", md: "flex" }}>
                   <FiChevronDown />
@@ -218,7 +236,7 @@ const MobileNav = ({ onOpen, ...rest }) => {
               zIndex={2}
               bg={useColorModeValue("white", "gray.900")}
               borderColor={useColorModeValue("gray.200", "gray.700")}>
-              <MenuItem>Sign out</MenuItem>
+              <MenuItem onClick={onLogout}>Sign out</MenuItem>
             </MenuList>
           </Menu>
         </Flex>

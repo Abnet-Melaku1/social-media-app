@@ -25,7 +25,7 @@ export default function Home() {
           loop and at the forefront of what's happening.
         </Text>
         <Stack spacing={6} direction={"row"}>
-          <Link as={LinkRouter} to='/login'>
+          <Link as={LinkRouter} to='/signin'>
             <Button
               as={"a"}
               href=''

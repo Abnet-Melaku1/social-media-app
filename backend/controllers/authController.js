@@ -6,6 +6,7 @@ const asyncHandler = require("express-async-handler")
 const registerUser = asyncHandler(async (req, res) => {
   const { firstName, email, password, lastName } = req.body
   //Check if user inserts all the credentials to register
+  console.log(req.body)
   if (!firstName || !email || !password) {
     res.status(400)
     throw new Error("Please add all fields")
@@ -54,7 +55,8 @@ const logInUser = asyncHandler(async (req, res) => {
   if (user && isPassword) {
     res.status(200).json({
       _id: user.id,
-      name: user.name,
+      firstName: user.firstName,
+      lastName: user.lastName,
       email: user.email,
       token: generateToken(user.id),
     })
@@ -64,7 +66,7 @@ const logInUser = asyncHandler(async (req, res) => {
   }
 
   // res.status(500);
-  throw new Error(error)
+  // throw new Error(error)
 })
 //get me
 const getMe = async (req, res) => {
