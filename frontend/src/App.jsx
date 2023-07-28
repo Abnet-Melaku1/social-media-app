@@ -12,6 +12,7 @@ import Account from "./pages/Account"
 import { ToastContainer } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 import { useSelector, useDispatch } from "react-redux"
+import CommentPage from "./pages/CommentPage"
 
 function App() {
   const { user } = useSelector((state) => state.auth)
@@ -24,6 +25,9 @@ function App() {
         </Routes>
         <Routes>
           <Route path='/feed' element={<Feed />} />
+        </Routes>
+        <Routes>
+          <Route path='/comment' element={<CommentPage />} />
         </Routes>
         <Routes>
           <Route path='/signup' element={<SignUp />} />
