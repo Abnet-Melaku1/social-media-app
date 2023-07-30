@@ -18,7 +18,11 @@ const userSchema = mongoose.Schema(
       type: String,
       required: [true, "please add your password."],
     },
-    profilepicture: {
+    profilePicture: {
+      url: String,
+      cloudinaryId: String,
+    },
+    country: {
       type: String,
       default: "",
     },

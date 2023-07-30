@@ -1,16 +1,22 @@
-const express = require("express");
-const router = express.Router();
-const bcrypt = require("bcryptjs");
-const { protect } = require("../middlewares/authMiddleWare");
+const express = require("express")
+const router = express.Router()
+const bcrypt = require("bcryptjs")
+const { protect } = require("../middlewares/authMiddleWare")
 const {
   deleteUser,
   updateUser,
   followerAndFollowing,
-} = require("../controllers/userController");
+} = require("../controllers/userController")
+const Multer = require("multer")
 
+const storage = new Multer.memoryStorage()
+const upload = Multer({
+  storage,
+})
 //update user
 
-router.put("/:id", protect, updateUser);
-router.delete("/:id", protect, deleteUser);
-router.put("/:id/followorunfollow", protect, followerAndFollowing);
-module.exports = router;
+router.post("/updateuser", [protect, upload.single("file")], updateUser)
+
+router.delete("/:id", protect, deleteUser)
+router.put("/:id/followorunfollow", protect, followerAndFollowing)
+module.exports = router

@@ -22,12 +22,59 @@ import {
   ModalCloseButton,
   ModalBody,
   ModalFooter,
+  FormErrorMessage,
 } from "@chakra-ui/react"
-
+import { useState, useEffect } from "react"
 import { SideBar as Layout } from "../components/SideBar"
-export const Page = () => {
-  const { isOpen, onOpen, onClose } = useDisclosure()
+import { useSelector, useDispatch } from "react-redux"
 
+import * as Yup from "yup"
+import { useFormik } from "formik"
+import { useNavigate } from "react-router-dom"
+import { updateUser, reset } from "../features/user/userSlice"
+
+export const Page = () => {
+  const { user } = useSelector((state) => state.auth)
+
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+  // useEffect(() => {
+  //   if (isError) {
+  //     toast.error(message)
+  //   }
+  // }, [user, isError, isSuccess, message, navigate, dispatch])
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const [selectedImage, setSelectedImage] = useState(null)
+
+  const formik = useFormik({
+    initialValues: {
+      firstName: user?.firstName,
+      lastName: user?.lastName,
+      email: user?.email,
+      country: "",
+      file: null,
+    },
+    onSubmit: (values) => {
+      console.log(values)
+
+      dispatch(updateUser(values))
+    },
+    validationSchema: Yup.object({
+      firstName: Yup.string().required("Required"),
+      lastName: Yup.string().required("Required"),
+      email: Yup.string().email("Invalid email address").required("Required"),
+      country: Yup.string().required("Required"),
+      file: Yup.mixed().required("File is required."),
+    }),
+  })
+  const imageChange = (e) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setSelectedImage(e.target.files[0])
+      const file = e.target.files[0]
+
+      formik.setFieldValue("file", file)
+    }
+  }
   return (
     <Flex
       py={6}
@@ -82,12 +129,11 @@ export const Page = () => {
         <Box border={"1px solid"} borderColor='gray.100' rounded='md'>
           <Avatar
             size={"xl"}
-            src={
-              "https://images.unsplash.com/photo-1520810627419-35e362c5dc07?ixlib=rb-1.2.1&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&ixid=eyJhcHBfaWQiOjE3Nzg0fQ"
-            }
             alt={"Avatar Alt"}
+            src={selectedImage ? URL.createObjectURL(selectedImage) : ""}
             mb={4}
             pos={"relative"}
+            showBorder={true}
             _after={{
               content: '""',
               w: 4,
@@ -101,7 +147,7 @@ export const Page = () => {
             }}
           />
           <Heading fontSize={"2xl"} fontFamily={"body"}>
-            Lindsey James
+            {user?.firstName} {user?.lastName}
           </Heading>
           <Text fontWeight={600} color={"gray.500"} mb={4}>
             Ethiopia
@@ -113,21 +159,32 @@ export const Page = () => {
           spacing={4}
           alignItems='center'
           justifyContent='center'>
-          <Button
-            flex={{ base: 0.5 }}
-            fontSize={"sm"}
-            rounded={"md"}
-            bg={"brand.500"}
-            color={"white"}
-            boxShadow={"md"}
-            _hover={{
-              bg: "brand.600",
-            }}
-            _focus={{
-              bg: "brand.600",
-            }}>
-            Upload Profile
-          </Button>
+          <FormControl flex={{ base: 0.5 }}>
+            <Input
+              type='file'
+              id='fileInput'
+              style={{ display: "none" }}
+              onChange={imageChange}
+            />
+            <Button
+              as='label'
+              htmlFor='fileInput'
+              fontSize={"sm"}
+              width='full'
+              cursor={"pointer"}
+              rounded={"md"}
+              bg={"brand.500"}
+              color={"white"}
+              boxShadow={"md"}
+              _hover={{
+                bg: "brand.600",
+              }}
+              _focus={{
+                bg: "brand.600",
+              }}>
+              Upload Profile
+            </Button>
+          </FormControl>
         </Stack>
 
         <Stack
@@ -156,55 +213,90 @@ export const Page = () => {
       </Box>
 
       <Box boxShadow='sm' p='25px' rounded='md' w='full' bg='white' mt='15px'>
-        <Stack
-          direction={{ base: "column", md: "row" }}
-          justifyContent={"center"}>
-          <Box>
-            <FormControl id='firstName' isRequired>
-              <FormLabel>First Name</FormLabel>
-              <Input type='text' focusBorderColor='brand.500' />
-            </FormControl>
-          </Box>
-          <Box>
-            <FormControl id='lastName'>
-              <FormLabel>Last Name</FormLabel>
-              <Input type='text' width={"full"} focusBorderColor='brand.500' />
-            </FormControl>
-          </Box>
-        </Stack>
-        <Stack
-          direction={{ base: "column", md: "row" }}
-          justifyContent={"center"}>
-          <Box>
-            <FormControl id='email' isRequired>
-              <FormLabel>Email Address</FormLabel>
-              <Input type='text' focusBorderColor='brand.500' />
-            </FormControl>
-          </Box>
-          <Box>
-            <FormControl id='country'>
-              <FormLabel>Country</FormLabel>
-              <Input type='text' focusBorderColor='brand.500' />
-            </FormControl>
-          </Box>
-        </Stack>
-        <Stack mt={8} direction={"row"} spacing={4}>
-          <Button
-            flex={1}
-            fontSize={"sm"}
-            rounded={"md"}
-            bg={"brand.500"}
-            color={"white"}
-            boxShadow={"md"}
-            _hover={{
-              bg: "brand.600",
-            }}
-            _focus={{
-              bg: "blue.600",
-            }}>
-            Update Account
-          </Button>
-        </Stack>
+        <form onSubmit={formik.handleSubmit}>
+          <Stack
+            direction={{ base: "column", md: "row" }}
+            justifyContent={"center"}>
+            <Box>
+              <FormControl
+                id='firstName'
+                isRequired
+                isInvalid={formik.touched.firstName && formik.errors.firstName}>
+                <FormLabel>First Name</FormLabel>
+                <Input
+                  type='text'
+                  focusBorderColor='brand.500'
+                  {...formik.getFieldProps("firstName")}
+                />
+                <FormErrorMessage>{formik.errors.firstName}</FormErrorMessage>
+              </FormControl>
+            </Box>
+            <Box>
+              <FormControl
+                isRequired
+                id='lastName'
+                isInvalid={formik.touched.lastName && formik.errors.lastName}>
+                <FormLabel>Last Name</FormLabel>
+                <Input
+                  type='text'
+                  width={"full"}
+                  focusBorderColor='brand.500'
+                  {...formik.getFieldProps("lastName")}
+                />
+                <FormErrorMessage>{formik.errors.lastName}</FormErrorMessage>
+              </FormControl>
+            </Box>
+          </Stack>
+          <Stack
+            direction={{ base: "column", md: "row" }}
+            justifyContent={"center"}>
+            <Box>
+              <FormControl
+                id='email'
+                isRequired
+                isInvalid={formik.touched.email && formik.errors.email}>
+                <FormLabel>Email Address</FormLabel>
+                <Input
+                  type='text'
+                  focusBorderColor='brand.500'
+                  {...formik.getFieldProps("email")}
+                />
+                <FormErrorMessage>{formik.errors.email}</FormErrorMessage>
+              </FormControl>
+            </Box>
+            <Box>
+              <FormControl
+                id='country'
+                isInvalid={formik.touched.country && formik.errors.country}>
+                <FormLabel>Country</FormLabel>
+                <Input
+                  type='text'
+                  focusBorderColor='brand.500'
+                  {...formik.getFieldProps("country")}
+                />
+                <FormErrorMessage>{formik.errors.country}</FormErrorMessage>
+              </FormControl>
+            </Box>
+          </Stack>
+          <Stack mt={8} direction={"row"} spacing={4}>
+            <Button
+              type='submit'
+              flex={1}
+              fontSize={"sm"}
+              rounded={"md"}
+              bg={"brand.500"}
+              color={"white"}
+              boxShadow={"md"}
+              _hover={{
+                bg: "brand.600",
+              }}
+              _focus={{
+                bg: "blue.600",
+              }}>
+              Update Account
+            </Button>
+          </Stack>
+        </form>
       </Box>
     </Flex>
   )
