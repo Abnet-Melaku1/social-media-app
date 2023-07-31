@@ -3,7 +3,7 @@ import userService from "./userService"
 const user = JSON.parse(localStorage.getItem("user"))
 const initialState = {
   user: user ? user : null,
-  userData: null,
+  userDatas: null,
   isError: false,
   isSuccess: false,
   isLoading: false,
@@ -28,6 +28,19 @@ export const updateUser = createAsyncThunk(
     }
   }
 )
+export const getUser = createAsyncThunk("/getuser", async (_, thunkAPI) => {
+  try {
+    const token = thunkAPI.getState().auth.user.token
+
+    return await userService.getUser(token)
+  } catch (error) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString()
+    return thunkAPI.rejectWithValue(message)
+  }
+})
 
 export const userSlice = createSlice({
   name: "user",
@@ -53,7 +66,20 @@ export const userSlice = createSlice({
       .addCase(updateUser.fulfilled, (state, action) => {
         state.isLoading = false
         state.isSuccess = true
-        state.userData = action.payload
+        state.userDatas = action.payload
+      })
+      .addCase(getUser.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(getUser.rejected, (state, action) => {
+        state.isLoading = false
+        state.isError = false
+        state.message = action.payload
+      })
+      .addCase(getUser.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.isSuccess = true
+        state.userDatas = action.payload
       })
   },
 })

@@ -31,33 +31,53 @@ import { useSelector, useDispatch } from "react-redux"
 import * as Yup from "yup"
 import { useFormik } from "formik"
 import { useNavigate } from "react-router-dom"
-import { updateUser, reset } from "../features/user/userSlice"
+import { updateUser, reset, getUser } from "../features/user/userSlice"
 
 export const Page = () => {
   const { user } = useSelector((state) => state.auth)
+  const { userDatas, isError, isLoading, isSuccess, message } = useSelector(
+    (state) => state.user
+  )
 
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  // useEffect(() => {
-  //   if (isError) {
-  //     toast.error(message)
-  //   }
-  // }, [user, isError, isSuccess, message, navigate, dispatch])
+  useEffect(() => {
+    if (isError) {
+      console.log(message)
+    }
+    if (user) {
+      console.log("getuser")
+      dispatch(getUser())
+      dispatch(reset())
+    }
+
+    if (!user) {
+      navigate("/signin")
+    }
+  }, [user, navigate, isError, message, dispatch])
+  if (isLoading) console.log("loading")
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [selectedImage, setSelectedImage] = useState(null)
 
   const formik = useFormik({
     initialValues: {
-      firstName: user?.firstName,
-      lastName: user?.lastName,
-      email: user?.email,
-      country: "",
+      firstName: userDatas?.firstName,
+      lastName: userDatas?.lastName,
+      email: userDatas?.email,
+      country: userDatas?.country,
       file: null,
     },
+    enableReinitialize: true,
     onSubmit: (values) => {
       console.log(values)
+      const formData = new FormData()
+      formData.append("firstName", values.firstName)
+      formData.append("lastName", values.lastName)
+      formData.append("country", values.country)
+      formData.append("email", values.email)
+      formData.append("file", values.file)
 
-      dispatch(updateUser(values))
+      dispatch(updateUser(formData))
     },
     validationSchema: Yup.object({
       firstName: Yup.string().required("Required"),
@@ -130,7 +150,11 @@ export const Page = () => {
           <Avatar
             size={"xl"}
             alt={"Avatar Alt"}
-            src={selectedImage ? URL.createObjectURL(selectedImage) : ""}
+            src={
+              selectedImage
+                ? URL.createObjectURL(selectedImage)
+                : userDatas?.profilePicture?.url
+            }
             mb={4}
             pos={"relative"}
             showBorder={true}

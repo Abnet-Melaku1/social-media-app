@@ -13,8 +13,20 @@ const updateUser = async (userData, token) => {
 
   return response.data
 }
+const getUser = async (token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+
+  const response = await axios.get(API_URL + "getuser", config)
+
+  return response.data
+}
 const userService = {
   updateUser,
+  getUser,
 }
 
 export default userService
