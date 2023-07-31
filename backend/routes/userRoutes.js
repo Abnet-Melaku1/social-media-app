@@ -6,6 +6,7 @@ const {
   deleteUser,
   updateUser,
   followerAndFollowing,
+  getUser,
 } = require("../controllers/userController")
 const Multer = require("multer")
 
@@ -16,6 +17,7 @@ const upload = Multer({
 //update user
 
 router.post("/updateuser", [protect, upload.single("file")], updateUser)
+router.get("/getuser", protect, getUser)
 
 router.delete("/:id", protect, deleteUser)
 router.put("/:id/followorunfollow", protect, followerAndFollowing)

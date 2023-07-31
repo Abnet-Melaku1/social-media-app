@@ -43,6 +43,7 @@ const updateUser = async (req, res) => {
     const userUpdated = await User.findByIdAndUpdate(user.id, data, {
       new: true,
     })
+    // console.log(data)
     if (!userUpdated) {
       return res.status(404).json({ error: "User not found" })
     }
@@ -52,6 +53,18 @@ const updateUser = async (req, res) => {
     console.log(err)
     res.status(500).json({ errors: [{ msg: "Server error" }] })
   }
+}
+//Get user
+const getUser = async (req, res) => {
+  const user = await User.findById(req.user.id)
+  const { email, firstName, lastName, country, profilePicture } = user
+  res.status(200).json({
+    email,
+    firstName,
+    lastName,
+    country,
+    profilePicture,
+  })
 }
 //const deleter user
 
@@ -89,4 +102,4 @@ const followerAndFollowing = asyncHandler(async (req, res) => {
     res.status(403).json("You can't follow your self.")
   }
 })
-module.exports = { deleteUser, updateUser, followerAndFollowing }
+module.exports = { deleteUser, updateUser, followerAndFollowing, getUser }
