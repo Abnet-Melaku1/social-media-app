@@ -58,6 +58,14 @@ export const Page = () => {
   if (isLoading) console.log("loading")
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [selectedImage, setSelectedImage] = useState(null)
+  const customStyles = {
+    "&:focus": {
+      boxShadow:
+        "0 0 0 3px linear-gradient(to right, #f7b538, #f29e2f, #eb872b, #e26f29, #d8572a)",
+      borderColor:
+        "2px solid linear-gradient(to right, #f7b538, #f29e2f, #eb872b, #e26f29, #d8572a)",
+    },
+  }
 
   const formik = useFormik({
     initialValues: {
@@ -102,7 +110,8 @@ export const Page = () => {
       alignItems='center'
       gap='15px'
       width='full'
-      bg='white'>
+      rounded='md'
+      bg='rgb(25,27,30)'>
       <Modal
         isOpen={isOpen}
         onClose={onClose}
@@ -141,12 +150,13 @@ export const Page = () => {
       <Box
         maxW={{ base: "full" }}
         w={"full"}
-        bg={useColorModeValue("white", "gray.900")}
+        bg='rgb(25,27,30)'
         boxShadow={"sm"}
         rounded={"lg"}
+        color='gray.300'
         p={6}
         textAlign={"center"}>
-        <Box border={"1px solid"} borderColor='gray.100' rounded='md'>
+        <Box border={"1px solid"} borderColor='gray.900' rounded='md'>
           <Avatar
             size={"xl"}
             alt={"Avatar Alt"}
@@ -197,14 +207,14 @@ export const Page = () => {
               width='full'
               cursor={"pointer"}
               rounded={"md"}
-              bg={"brand.500"}
+              bg='linear-gradient(to right, #f7b538, #f29e2f, #eb872b, #e26f29, #d8572a)'
               color={"white"}
               boxShadow={"md"}
               _hover={{
-                bg: "brand.600",
+                bg: "linear-gradient(to right, #f7b538, #f29e2f, #eb872b, #e26f29, #d8572a)",
               }}
               _focus={{
-                bg: "brand.600",
+                bg: "linear-gradient(to right, #f7b538, #f29e2f, #eb872b, #e26f29, #d8572a)",
               }}>
               Upload Profile
             </Button>
@@ -222,11 +232,11 @@ export const Page = () => {
             flex={{ base: 0.5 }}
             fontSize={"sm"}
             rounded={"md"}
-            bg={"red.400"}
+            bg={"red.500"}
             color={"white"}
             boxShadow={"md"}
             _hover={{
-              bg: "red.500",
+              bg: "red.400",
             }}
             _focus={{
               bg: "red.500",
@@ -236,20 +246,28 @@ export const Page = () => {
         </Stack>
       </Box>
 
-      <Box boxShadow='sm' p='25px' rounded='md' w='full' bg='white' mt='15px'>
+      <Box
+        boxShadow='sm'
+        p='25px'
+        rounded='md'
+        w='full'
+        color='white'
+        bg='rgb(25,27,30)'
+        mt='15px'>
         <form onSubmit={formik.handleSubmit}>
           <Stack
             direction={{ base: "column", md: "row" }}
-            justifyContent={"center"}>
+            justifyContent={"center"}
+            color='gray.300'>
             <Box>
               <FormControl
                 id='firstName'
                 isRequired
                 isInvalid={formik.touched.firstName && formik.errors.firstName}>
-                <FormLabel>First Name</FormLabel>
+                <FormLabel color='gray.300'>First Name</FormLabel>
                 <Input
                   type='text'
-                  focusBorderColor='brand.500'
+                  focusBorderColor=' #f4845f'
                   {...formik.getFieldProps("firstName")}
                 />
                 <FormErrorMessage>{formik.errors.firstName}</FormErrorMessage>
@@ -260,11 +278,11 @@ export const Page = () => {
                 isRequired
                 id='lastName'
                 isInvalid={formik.touched.lastName && formik.errors.lastName}>
-                <FormLabel>Last Name</FormLabel>
+                <FormLabel color='gray.300'>Last Name</FormLabel>
                 <Input
                   type='text'
                   width={"full"}
-                  focusBorderColor='brand.500'
+                  focusBorderColor=' #f4845f'
                   {...formik.getFieldProps("lastName")}
                 />
                 <FormErrorMessage>{formik.errors.lastName}</FormErrorMessage>
@@ -279,10 +297,10 @@ export const Page = () => {
                 id='email'
                 isRequired
                 isInvalid={formik.touched.email && formik.errors.email}>
-                <FormLabel>Email Address</FormLabel>
+                <FormLabel color='gray.300'>Email Address</FormLabel>
                 <Input
                   type='text'
-                  focusBorderColor='brand.500'
+                  focusBorderColor=' #f4845f'
                   {...formik.getFieldProps("email")}
                 />
                 <FormErrorMessage>{formik.errors.email}</FormErrorMessage>
@@ -292,10 +310,12 @@ export const Page = () => {
               <FormControl
                 id='country'
                 isInvalid={formik.touched.country && formik.errors.country}>
-                <FormLabel>Country</FormLabel>
+                <FormLabel color='gray.300'>Country</FormLabel>
                 <Input
                   type='text'
-                  focusBorderColor='brand.500'
+                  border='1px'
+                  // borderColor="linear-gradient(to right, #f7b538, #f29e2f, #eb872b, #e26f29, #d8572a)'"
+                  focusBorderColor=' #f4845f'
                   {...formik.getFieldProps("country")}
                 />
                 <FormErrorMessage>{formik.errors.country}</FormErrorMessage>
@@ -308,14 +328,14 @@ export const Page = () => {
               flex={1}
               fontSize={"sm"}
               rounded={"md"}
-              bg={"brand.500"}
+              bg='linear-gradient(to right, #f7b538, #f29e2f, #eb872b, #e26f29, #d8572a)'
               color={"white"}
               boxShadow={"md"}
               _hover={{
-                bg: "brand.600",
+                bg: "linear-gradient(to right, #f7b538, #f29e2f, #eb872b, #e26f29, #d8572a)",
               }}
               _focus={{
-                bg: "blue.600",
+                bg: "linear-gradient(to right, #f7b538, #f29e2f, #eb872b, #e26f29, #d8572a)",
               }}>
               Update Account
             </Button>

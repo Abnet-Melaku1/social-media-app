@@ -11,7 +11,6 @@ import {
   Button,
   Heading,
   Text,
-  useColorModeValue,
   Link,
   FormErrorMessage,
   Spinner,
@@ -47,7 +46,6 @@ export default function SignUp() {
   const formik = useFormik({
     initialValues: { firstName: "", email: "", lastName: "", password: "" },
     onSubmit: (values) => {
-      console.log(values)
       dispatch(register(values))
     },
     validationSchema: Yup.object({
@@ -58,26 +56,28 @@ export default function SignUp() {
     }),
   })
   return (
-    <Flex minH={"100vh"} align={"center"} justify={"center"} bg='white'>
-      <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
+    <Flex
+      minH={"100vh"}
+      align={"center"}
+      justify={"center"}
+      bg='rgb(20,20,20)'
+      w='full'>
+      <Stack spacing={8} mx='auto' maxW={"xl"} px={6}>
         <Stack align={"center"}>
-          <Heading fontSize={"4xl"} textAlign={"center"}>
+          <Heading fontSize={"4xl"} textAlign={"center"} color='gray.300'>
             Sign up
           </Heading>
-          <Text fontSize={"lg"} color={"gray.600"}>
+          <Text fontSize={"lg"} color={"gray.300"}>
             to connect with the world. ✌️
           </Text>
         </Stack>
-        <Box
-          rounded={"lg"}
-          bg={useColorModeValue("white", "gray.700")}
-          boxShadow={"lg"}
-          p={8}>
+        <Box rounded={"lg"} bg='rgb(25,27,30)' w='full' boxShadow={"lg"}>
           <form onSubmit={formik.handleSubmit}>
-            <Stack spacing={4}>
+            <Stack spacing={4} p='10'>
               <HStack
                 flexDirection={{ base: "column", md: "row" }}
-                justifyContent={"flex-start"}>
+                // justifyContent={"flex-start"}
+                alignItems='center'>
                 <Box w={{ base: "full", md: "auto" }}>
                   <FormControl
                     id='firstName'
@@ -85,10 +85,12 @@ export default function SignUp() {
                     isInvalid={
                       formik.touched.firstName && formik.errors.firstName
                     }>
-                    <FormLabel>First Name</FormLabel>
+                    <FormLabel color='gray.300'>First Name</FormLabel>
                     <Input
+                      color='gray.300'
+                      bg='rgb(20,20,20)'
                       type='text'
-                      focusBorderColor='brand.500'
+                      focusBorderColor='#d8572a'
                       {...formik.getFieldProps("firstName")}
                     />
                     <FormErrorMessage>
@@ -103,10 +105,12 @@ export default function SignUp() {
                     isInvalid={
                       formik.touched.lastName && formik.errors.lastName
                     }>
-                    <FormLabel>Last Name</FormLabel>
+                    <FormLabel color='gray.300'>Last Name</FormLabel>
                     <Input
+                      color='gray.300'
+                      bg='rgb(20,20,20)'
                       type='text'
-                      focusBorderColor='brand.500'
+                      focusBorderColor='#d8572a'
                       {...formik.getFieldProps("lastName")}
                     />
                     <FormErrorMessage>
@@ -119,10 +123,12 @@ export default function SignUp() {
                 id='email'
                 isRequired
                 isInvalid={formik.touched.email && formik.errors.email}>
-                <FormLabel>Email address</FormLabel>
+                <FormLabel color='gray.300'>Email address</FormLabel>
                 <Input
                   type='email'
-                  focusBorderColor='brand.500'
+                  bg='rgb(20,20,20)'
+                  color='gray.300'
+                  focusBorderColor='#d8572a'
                   {...formik.getFieldProps("email")}
                 />
                 <FormErrorMessage>{formik.errors.email}</FormErrorMessage>
@@ -131,11 +137,13 @@ export default function SignUp() {
                 id='password'
                 isRequired
                 isInvalid={formik.touched.password && formik.errors.password}>
-                <FormLabel>Password</FormLabel>
+                <FormLabel color='gray.300'>Password</FormLabel>
                 <InputGroup>
                   <Input
+                    color='gray.300'
+                    bg='rgb(20,20,20)'
                     type={showPassword ? "text" : "password"}
-                    focusBorderColor='brand.500'
+                    focusBorderColor='#d8572a'
                     {...formik.getFieldProps("password")}
                   />
                   <InputRightElement h={"full"}>
@@ -155,18 +163,21 @@ export default function SignUp() {
                   type='submit'
                   loadingText='Submitting'
                   size='lg'
-                  bg={"brand.400"}
+                  bg='linear-gradient(to right, #f7b538, #f29e2f, #eb872b, #e26f29, #d8572a)'
                   color={"white"}
                   _hover={{
-                    bg: "brand.500",
+                    bg: "linear-gradient(to right, #f7b538, #f29e2f, #eb872b, #e26f29, #d8572a)",
                   }}>
                   {isLoading ? <Spinner size='sm' /> : "Sign up"}
                 </Button>
               </Stack>
               <Stack pt={6}>
-                <Text align={"center"}>
+                <Text align={"center"} color='gray.300'>
                   Already a user?{" "}
-                  <Link as={LinkRouter} to='/signin' color={"brand.400"}>
+                  <Link
+                    as={LinkRouter}
+                    to='/signin'
+                    color='rgba(252, 204, 1, 0.8)'>
                     Sign in
                   </Link>
                 </Text>

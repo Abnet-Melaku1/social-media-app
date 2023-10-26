@@ -10,10 +10,10 @@ import {
   Button,
   Heading,
   Text,
-  useColorModeValue,
   Spinner,
   FormErrorMessage,
 } from "@chakra-ui/react"
+
 import * as Yup from "yup"
 import { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
@@ -21,10 +21,8 @@ import { useSelector, useDispatch } from "react-redux"
 import { toast } from "react-toastify"
 import { useFormik } from "formik"
 import { login, reset } from "../features/auth/authSlice"
-import { useState } from "react"
 
 export default function SignIn() {
-  const [showPassword, setShowPassword] = useState(false)
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const { user, isLoading, isError, isSuccess, message } = useSelector(
@@ -44,7 +42,6 @@ export default function SignIn() {
   const formik = useFormik({
     initialValues: { email: "", password: "" },
     onSubmit: (values) => {
-      // console.log(values)
       dispatch(login(values))
     },
     validationSchema: Yup.object({
@@ -53,25 +50,28 @@ export default function SignIn() {
     }),
   })
   return (
-    <Flex minH={"100vh"} align={"center"} justify={"center"} bg={"white"}>
+    <Flex minH={"100vh"} align={"center"} justify={"center"} bg='rgb(20,20,20)'>
       <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
         <Stack align={"center"}>
-          <Heading fontSize={"4xl"}>Sign in to your account</Heading>
-          <Text fontSize={"lg"} color={"gray.600"}>
-            to enjoy all of our cool <Link color={"brand.400"}>features</Link>{" "}
-            ✌️
+          <Heading fontSize={"4xl"} color='gray.300'>
+            Sign in to your account
+          </Heading>
+          <Text fontSize={"lg"} color={"gray.300"}>
+            to enjoy all of our cool <Link color='#d8572a'>features</Link> ✌️
           </Text>
         </Stack>
-        <Box rounded={"lg"} bg={"white"} boxShadow={"lg"} p={8}>
+        <Box rounded={"lg"} bg='rgb(25,27,30)' boxShadow={"lg"} p={8}>
           <form onSubmit={formik.handleSubmit}>
             <Stack spacing={4}>
               <FormControl
                 id='email'
                 isInvalid={formik.touched.email && formik.errors.email}>
-                <FormLabel>Email address</FormLabel>
+                <FormLabel color='gray.300'>Email address</FormLabel>
                 <Input
+                  bg='rgb(20,20,20)'
                   type='email'
-                  focusBorderColor='brand.500'
+                  color='gray.300'
+                  focusBorderColor='#d8572a'
                   {...formik.getFieldProps("email")}
                 />
                 <FormErrorMessage>{formik.errors.email}</FormErrorMessage>
@@ -79,10 +79,12 @@ export default function SignIn() {
               <FormControl
                 id='password'
                 isInvalid={formik.touched.password && formik.errors.password}>
-                <FormLabel>Password</FormLabel>
+                <FormLabel color='gray.300'>Password</FormLabel>
                 <Input
+                  bg='rgb(20,20,20)'
+                  color='gray.300'
                   type='password'
-                  focusBorderColor='brand.500'
+                  focusBorderColor='#d8572a'
                   {...formik.getFieldProps("password")}
                 />
                 <FormErrorMessage>{formik.errors.password}</FormErrorMessage>
@@ -92,16 +94,16 @@ export default function SignIn() {
                   direction={{ base: "column", sm: "row" }}
                   align={"start"}
                   justify={"space-between"}>
-                  <Checkbox isChecked colorScheme={"brand"}>
+                  <Checkbox isChecked colorScheme={"brand"} color='#d8572a'>
                     Remember me
                   </Checkbox>
                 </Stack>
                 <Button
                   type='submit'
-                  bg={"brand.400"}
+                  bg='linear-gradient(to right, #f7b538, #f29e2f, #eb872b, #e26f29, #d8572a)'
                   color={"white"}
                   _hover={{
-                    bg: "brand.500",
+                    bg: "linear-gradient(to right, #f7b538, #f29e2f, #eb872b, #e26f29, #d8572a)",
                   }}>
                   {isLoading ? <Spinner size='sm' speed='0.65s' /> : "Sign in"}
                 </Button>

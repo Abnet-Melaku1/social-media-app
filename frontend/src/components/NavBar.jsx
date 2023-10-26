@@ -23,85 +23,97 @@ import {
   ChevronDownIcon,
   ChevronRightIcon,
 } from "@chakra-ui/icons"
+import React from "react"
 import { Link as LinkRouter } from "react-router-dom"
 import img from "../assets/logo-no-background.svg"
 export default function NavBar() {
   const { isOpen, onToggle } = useDisclosure()
 
   return (
-    <Container maxW='7xl'>
-      <Flex
-        bg='rgba(255, 255, 255, 0.2)'
-        borderRadius='16px'
-        backdropFilter='blur(5px)'
-        webkitBackdropFilter='blur(5px)'
-        border='1px solid rgba(255, 255, 255, 0.3)'
-        color={useColorModeValue("gray.600", "white")}
-        minH={"60px"}
-        py={{ base: 2 }}
-        px={{ base: 4 }}
-        align={"center"}>
+    <Box bg='rgb(20,20,20)'>
+      <Container maxW='7xl'>
         <Flex
-          flex={{ base: 1, md: "auto" }}
-          ml={{ base: -2 }}
-          display={{ base: "flex", md: "none" }}>
-          <IconButton
-            onClick={onToggle}
-            icon={
-              isOpen ? <CloseIcon w={3} h={3} /> : <HamburgerIcon w={5} h={5} />
-            }
-            variant={"ghost"}
-            aria-label={"Toggle Navigation"}
-          />
-        </Flex>
-        <Flex flex={{ base: 1 }} justify={{ base: "center", md: "start" }}>
-          <Link as={LinkRouter} to='/'>
-            <Image src={img} width='100px' objectFit='cover' alt='logo' />
-          </Link>
-          <Flex display={{ base: "none", md: "flex" }} ml={10}>
-            <DesktopNav />
+          bg='rgb(20,20,20)'
+          borderRadius='16px'
+          backdropFilter='blur(5px)'
+          webkitBackdropFilter='blur(5px)'
+          border='1px solid rgb(20,20,20)'
+          color={useColorModeValue("gray.600", "white")}
+          minH={"60px"}
+          py={{ base: 2 }}
+          px={{ base: 4 }}
+          align={"center"}>
+          <Flex
+            flex={{ base: 1, md: "auto" }}
+            ml={{ base: -2 }}
+            display={{ base: "flex", md: "none" }}>
+            <IconButton
+              onClick={onToggle}
+              icon={
+                isOpen ? (
+                  <CloseIcon w={3} h={3} />
+                ) : (
+                  <HamburgerIcon w={5} h={5} />
+                )
+              }
+              variant={"ghost"}
+              aria-label={"Toggle Navigation"}
+            />
           </Flex>
+          <Flex flex={{ base: 1 }} justify={{ base: "center", md: "start" }}>
+            <Link as={LinkRouter} to='/'>
+              <Image
+                src='/logo-no-background.svg'
+                width='160px'
+                objectFit='cover'
+                alt='logo'
+              />
+            </Link>
+            <Flex display={{ base: "none", md: "flex" }} ml={10}>
+              <DesktopNav />
+            </Flex>
+          </Flex>
+
+          <Stack
+            flex={{ base: 1, md: 0 }}
+            justify={"flex-end"}
+            direction={"row"}
+            align={"center"}
+            spacing={6}>
+            <Link as={LinkRouter} to='/signin'>
+              <Button
+                display={{ base: "none", md: "inline-flex" }}
+                fontSize={"sm"}
+                px={6}
+                fontWeight={600}
+                bg='gray.100'
+                _hover={{
+                  bg: "gray.200",
+                }}
+                rounded={"full"}>
+                Sign In
+              </Button>
+            </Link>
+            <Link as={LinkRouter} to='/signup'>
+              <Button
+                fontSize={"sm"}
+                fontWeight={600}
+                color={"white"}
+                bg='linear-gradient(to right, #f7b538, #f29e2f, #eb872b, #e26f29, #d8572a)'
+                _hover={{
+                  bg: "linear-gradient(to right, #f7b538, #f29e2f, #eb872b, #e26f29, #d8572a)",
+                }}>
+                Sign Up
+              </Button>
+            </Link>
+          </Stack>
         </Flex>
 
-        <Stack
-          flex={{ base: 1, md: 0 }}
-          justify={"flex-end"}
-          direction={"row"}
-          align={"center"}
-          spacing={6}>
-          <Link as={LinkRouter} to='/signin'>
-            <Button
-              display={{ base: "none", md: "inline-flex" }}
-              fontSize={"sm"}
-              px={6}
-              fontWeight={600}
-              bg='gray.100'
-              _hover={{
-                bg: "gray.200",
-              }}
-              rounded={"full"}>
-              Sign In
-            </Button>
-          </Link>
-          <Link as={LinkRouter} to='/signup'>
-            <Button
-              fontSize={"sm"}
-              fontWeight={600}
-              color={"white"}
-              bg={"brand.500"}
-              _hover={{
-                bg: "brand.400",
-              }}>
-              Sign Up
-            </Button>
-          </Link>
-        </Stack>
-      </Flex>
-
-      <Collapse in={isOpen} animateOpacity>
-        <MobileNav />
-      </Collapse>
-    </Container>
+        <Collapse in={isOpen} animateOpacity color='gray.300'>
+          <MobileNav />
+        </Collapse>
+      </Container>
+    </Box>
   )
 }
 
@@ -126,7 +138,7 @@ const DesktopSubNav = ({ label, href, subLabel }) => {
         <Box>
           <Text
             transition={"all .3s ease"}
-            _groupHover={{ color: "pink.400" }}
+            _groupHover={{ color: "gray.300" }}
             fontWeight={500}>
             {label}
           </Text>
@@ -140,7 +152,7 @@ const DesktopSubNav = ({ label, href, subLabel }) => {
           justify={"flex-end"}
           align={"center"}
           flex={1}>
-          <Icon color={"pink.400"} w={5} h={5} as={ChevronRightIcon} />
+          <Icon color={"gray.200"} w={5} h={5} as={ChevronRightIcon} />
         </Flex>
       </Stack>
     </Link>
@@ -149,10 +161,7 @@ const DesktopSubNav = ({ label, href, subLabel }) => {
 
 const MobileNav = () => {
   return (
-    <Stack
-      bg={useColorModeValue("white", "gray.800")}
-      p={4}
-      display={{ md: "none" }}>
+    <Stack bg='rgb(25,27,30)' p={4} display={{ md: "none" }}>
       <Stack
         flex={{ base: 1, md: 0 }}
         justify={"flex-end"}
@@ -166,7 +175,7 @@ const MobileNav = () => {
           bg={"gray.300"}
           href={"#"}
           _hover={{
-            bg: "gray.400",
+            bg: "rgba(252, 204, 1, 0.7)",
           }}>
           Sign In
         </Button>

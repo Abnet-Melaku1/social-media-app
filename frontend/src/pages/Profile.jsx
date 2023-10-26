@@ -8,16 +8,37 @@ import {
   Text,
   Stack,
   Button,
-  useColorModeValue,
 } from "@chakra-ui/react"
 import Post from "../components/Post"
 import { SideBar as Layout } from "../components/SideBar"
+import { useParams } from "react-router-dom"
+import { useDispatch, useSelector } from "react-redux"
+import { useEffect } from "react"
+import { toast } from "react-toastify"
+import { getUserPosts, reset } from "../features/user/userSlice"
 const Page = () => {
+  const { userId } = useParams()
+  const dispatch = useDispatch()
+  const { userData, isError, message } = useSelector((state) => state.user)
+  const { user } = useSelector((state) => state.auth)
+  useEffect(() => {
+    if (isError) {
+      toast.error(message)
+    }
+    dispatch(getUserPosts(userId))
+
+    return () => {
+      dispatch(reset())
+    }
+  }, [dispatch, isError, message, userId])
+
   return (
     <Center py={6}>
       <Box
         w={"full"}
-        bg={useColorModeValue("white", "gray.800")}
+        // bg='rgb(20,20,20)'
+        bg='rgb(25,27,30)'
+        color='gray.300'
         boxShadow={"sm"}
         rounded={"md"}
         minH={"100vh"}
@@ -33,9 +54,7 @@ const Page = () => {
         <Flex justify={"center"} mt={-12}>
           <Avatar
             size={{ base: "xl", md: "2xl" }}
-            src={
-              "https://images.unsplash.com/photo-1619946794135-5bc917a27793?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=b616b2c5b373a80ffc9636ba24f7a4a9"
-            }
+            src={userData?.user.profilePicture.url}
             alt={"Author"}
             css={{
               border: "2px solid white",
@@ -46,41 +65,47 @@ const Page = () => {
         <Box p={6}>
           <Stack spacing={0} align={"center"} mb={5}>
             <Heading fontSize={"2xl"} fontWeight={500} fontFamily={"body"}>
-              Hewan
+              {userData?.user.firstName} {userData?.user.lastName}
             </Heading>
             <Text color={"gray.500"}>Frontend Developer</Text>
           </Stack>
 
           <Stack direction={"row"} justify={"center"} spacing={6}>
             <Stack spacing={0} align={"center"}>
-              <Text fontWeight={600}>23k</Text>
+              <Text fontWeight={600}>{userData?.user.followers.length}</Text>
               <Text fontSize={"sm"} color={"gray.500"}>
                 Followers
               </Text>
             </Stack>
             <Stack spacing={0} align={"center"}>
-              <Text fontWeight={600}>23k</Text>
+              <Text fontWeight={600}>{userData?.user.followings.length}</Text>
               <Text fontSize={"sm"} color={"gray.500"}>
-                Followers
+                Followings
               </Text>
             </Stack>
           </Stack>
           <Stack spacing={0} align={"center"}>
-            <Button
-              w={"50%"}
-              mt={8}
-              bg={"brand.500"}
-              color={"white"}
-              rounded={"md"}
-              _hover={{
-                transform: "translateY(-2px)",
-                boxShadow: "lg",
-              }}>
-              Follow
-            </Button>
+            {user?._id !== userData?.user._id && (
+              <Button
+                w={"50%"}
+                mt={8}
+                bg='linear-gradient(to right, #f7b538, #f29e2f, #eb872b, #e26f29, #d8572a)'
+                color={"white"}
+                rounded={"md"}
+                _hover={{
+                  transform: "translateY(-2px)",
+                  boxShadow: "lg",
+                }}>
+                Follow
+              </Button>
+            )}
           </Stack>
         </Box>
-        <Post />
+        <Box maxW='full' mx='15px'>
+          {userData?.posts.map((post) => (
+            <Post key={post._id} isBlack={true} post={post} />
+          ))}
+        </Box>
       </Box>
     </Center>
   )

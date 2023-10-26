@@ -1,9 +1,17 @@
 ::-webkit-scrollbar {
-  width: 8px !important;
+  width: 7px !important;
   border-radius: 25px !important;
+  background-color: rgb(25, 27, 30);
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: rgba(70, 70, 229, 0.7) !important;
+  background-image: linear-gradient(
+    to right,
+    #f7b538,
+    #f29e2f,
+    #eb872b,
+    #e26f29,
+    #d8572a
+  ) !important;
   border-radius: 25px !important;
 }

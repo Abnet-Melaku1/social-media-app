@@ -13,6 +13,8 @@ import { ToastContainer } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 import { useSelector, useDispatch } from "react-redux"
 import CommentPage from "./pages/CommentPage"
+import Friends from "./pages/Friends"
+import SavedPosts from "./pages/SavedPosts"
 
 function App() {
   const { user } = useSelector((state) => state.auth)
@@ -21,13 +23,19 @@ function App() {
       <Router>
         {!user && <NavBar />}
         <Routes>
-          <Route path='/' element={<Home />} />
+          <Route path='/' element={<Feed />} />
         </Routes>
         <Routes>
           <Route path='/feed' element={<Feed />} />
         </Routes>
         <Routes>
-          <Route path='/comment' element={<CommentPage />} />
+          <Route path='/friends/:userId' element={<Friends />} />
+        </Routes>
+        <Routes>
+          <Route path='/savedposts' element={<SavedPosts />} />
+        </Routes>
+        <Routes>
+          <Route path='/comment/:postId' element={<CommentPage />} />
         </Routes>
         <Routes>
           <Route path='/signup' element={<SignUp />} />
@@ -36,14 +44,10 @@ function App() {
           <Route path='/signin' element={<SignIn />} />
         </Routes>
         <Routes>
-          <Route path='/profile' element={<Profile />} />
+          <Route path='/profile/:userId' element={<Profile />} />
         </Routes>
         <Routes>
           <Route path='/setting' element={<Account />} />
-        </Routes>
-
-        <Routes>
-          <Route path='/signin' element={<SignIn />} />
         </Routes>
       </Router>
       <ToastContainer />
