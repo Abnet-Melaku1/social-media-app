@@ -13,15 +13,15 @@ const port = process.env.PORT || 5000
 const app = express()
 const allowedOrigins = ["https://pazzion-social-media.vercel.app/"]
 
-app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*")
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "OPTIONS, GET, POST, PUT, PATCH, DELETE"
-  )
-  res.setHeader("Access-Control-Allow-Headers", "*")
-  next()
-})
+// app.use((req, res, next) => {
+//   res.setHeader("Access-Control-Allow-Origin", "*")
+//   res.setHeader(
+//     "Access-Control-Allow-Methods",
+//     "OPTIONS, GET, POST, PUT, PATCH, DELETE"
+//   )
+//   res.setHeader("Access-Control-Allow-Headers", "*")
+//   next()
+// })
 app.use((req, res, next) => {
   res.setHeader(
     "Access-Control-Allow-Origin",
