@@ -30,14 +30,18 @@ const userSchema = mongoose.Schema(
       type: String,
       default: "",
     },
-    followers: {
-      type: Array,
-      default: [],
-    },
-    followings: {
-      type: Array,
-      default: [],
-    },
+    followers: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+    followings: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
 
     bio: {
       type: String,
@@ -60,6 +64,6 @@ const userSchema = mongoose.Schema(
       default: [],
     },
   },
-  { timestapms: true }
+  { timestamps: true }
 )
 module.exports = mongoose.model("User", userSchema)

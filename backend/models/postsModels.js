@@ -20,11 +20,35 @@ const postSchema = new Schema(
       type: Array,
       default: [],
     },
-    comments: {
-      type: Array,
-      default: [],
+    isSaved: {
+      type: Boolean,
+      default: false,
     },
+    isLiked: {
+      type: Boolean,
+      default: false,
+    },
+    comments: [
+      {
+        user: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User",
+        },
+        text: String,
+        createdAt: {
+          type: Date,
+          default: Date.now,
+        },
+      },
+      { timestamps: true },
+    ],
   },
   { timestamps: true }
 )
 module.exports = mongoose.model("Post", postSchema)
+postSchema.pre("save", function (next) {
+  if (this.isNew && this.isSaved === undefined) {
+    this.isSaved = false
+  }
+  next()
+})

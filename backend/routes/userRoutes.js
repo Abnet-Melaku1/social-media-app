@@ -7,8 +7,12 @@ const {
   updateUser,
   followerAndFollowing,
   getUser,
+  getSuggestedUsers,
+  savePosts,
+  getSavedPosts,
 } = require("../controllers/userController")
 const Multer = require("multer")
+const { getTimeline, getUserPosts } = require("../controllers/postController")
 
 const storage = new Multer.memoryStorage()
 const upload = Multer({
@@ -16,9 +20,14 @@ const upload = Multer({
 })
 //update user
 
-router.post("/updateuser", [protect, upload.single("file")], updateUser)
-router.get("/getuser", protect, getUser)
-
-router.delete("/:id", protect, deleteUser)
+router.get("/", protect, getSuggestedUsers)
 router.put("/:id/followorunfollow", protect, followerAndFollowing)
+router.post("/updateuser", [protect, upload.single("file")], updateUser)
+router.put("/:id/saveposts", protect, savePosts)
+
+router.get("/getuser", protect, getUser)
+router.get("/getsavedposts", protect, getSavedPosts)
+router.get("/timeline", protect, getTimeline)
+router.get("/:userId", protect, getUserPosts)
+router.delete("/:id", protect, deleteUser)
 module.exports = router
