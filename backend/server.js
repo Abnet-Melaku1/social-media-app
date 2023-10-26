@@ -16,7 +16,6 @@ app.use(function (req, res, next) {
   const allowedOrigins = [
     "http://localhost:5173",
     "https://pazzion-social-media.vercel.app/",
-    "https://pazzion-social-media.vercel.app/",
   ]
   const origin = req.headers.origin
   if (allowedOrigins.includes(origin)) {

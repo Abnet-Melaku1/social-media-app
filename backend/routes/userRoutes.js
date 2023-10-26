@@ -10,6 +10,7 @@ const {
   getSuggestedUsers,
   savePosts,
   getSavedPosts,
+  test,
 } = require("../controllers/userController")
 const Multer = require("multer")
 const { getTimeline, getUserPosts } = require("../controllers/postController")
@@ -19,7 +20,7 @@ const upload = Multer({
   storage,
 })
 //update user
-
+router.get("/test", test)
 router.get("/", protect, getSuggestedUsers)
 router.put("/:id/followorunfollow", protect, followerAndFollowing)
 router.post("/updateuser", [protect, upload.single("file")], updateUser)

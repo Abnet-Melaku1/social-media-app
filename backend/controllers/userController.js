@@ -200,12 +200,16 @@ const getSavedPosts = async (req, res) => {
       .json({ message: "Error fetching saved posts", error: err.message })
   }
 }
+const test = async (req, res) => {
+  res.send("everything is working")
+}
 module.exports = {
   getSavedPosts,
   deleteUser,
   updateUser,
   followerAndFollowing,
   getUser,
+  test,
   savePosts,
   getSuggestedUsers,
 }
