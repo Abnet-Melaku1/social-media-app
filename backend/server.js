@@ -8,7 +8,7 @@ const cors = require("cors")
 const connectDb = require("./config/db")
 // const users = require("./routes/userRoutes");
 const { errorHandler } = require("./middlewares/errorMiddleware")
-const port = process.env.PORT || 5000
+const port = 443
 
 const app = express()
 
