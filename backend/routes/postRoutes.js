@@ -7,7 +7,7 @@ const {
   deletePost,
   likeAndDislikePost,
   addComment,
-  savePosts,
+
   getPost,
   getUserPosts,
 } = require("../controllers/postController")
