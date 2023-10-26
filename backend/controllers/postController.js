@@ -21,54 +21,141 @@ async function handleUpload(file) {
 //create post
 const createPost = async (req, res) => {
   try {
-    const b64 = Buffer.from(req.file.buffer).toString("base64")
-    let dataURI = "data:" + req.file.mimetype + ";base64," + b64
-    const cldRes = await handleUpload(dataURI)
+    console.log(req.user)
+    let cldRes = {}
+
+    if (req.file) {
+      const b64 = Buffer.from(req.file.buffer).toString("base64")
+      let dataURI = "data:" + req.file.mimetype + ";base64," + b64
+      cldRes = await handleUpload(dataURI)
+    }
+
     const post = new Post({
       user: req.user.id,
       desc: req.body.desc,
       image: {
-        url: cldRes.secure_url,
-        cloudinaryId: cldRes.asset_id,
+        url: cldRes.secure_url || "",
+        cloudinaryId: cldRes.asset_id || "",
       },
     })
+
     await post.save()
     res.status(200).json(post)
   } catch (error) {
-    console.log(err)
+    console.log(error)
     res.status(500).json({ errors: [{ msg: "Server error" }] })
   }
 }
+
 //get a post
 const getPost = asyncHandler(async (req, res) => {
-  const post = await Post.findById(req.params.id)
+  const post = await Post.findById(req.params.postId).populate({
+    path: "comments.user",
+    model: "User",
+    select: "firstName lastName profilePicture",
+  })
+
   if (!post) {
-    res.status(400)
-    throw new Error("post not found.")
-  } else {
-    res.status(200).json(post)
+    return res.status(404).json({ message: "Post not found" })
+  }
+
+  post.comments = await Promise.all(
+    post.comments.map(async (comment) => {
+      const populatedComment = comment.toObject()
+      populatedComment.createdAt = comment.createdAt
+      populatedComment.updatedAt = comment.updatedAt
+      return populatedComment
+    })
+  )
+
+  res.json(post)
+})
+
+//get add Comment
+const addComment = asyncHandler(async (req, res) => {
+  console.log(req.body)
+  const { postId, text } = req.body
+  console.log("postId", postId)
+  try {
+    const post = await Post.findById(postId)
+
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" })
+    }
+
+    const comment = {
+      user: req.user.id,
+      text: text,
+    }
+
+    post.comments.push(comment)
+
+    await post.save()
+
+    res
+      .status(201)
+      .json({ message: "Comment added successfully", updatedPost: post })
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({ message: "Error adding comment" })
   }
 })
 //get users post
 const getUserPosts = async (req, res) => {
   try {
-    const user = await user.findOne({ email: req.params.email })
-    const posts = await Post.find({ user: req.user.id })
-    res.status(200).json(posts)
+    const userId = req.params.userId
+    const user = await User.findById(userId)
+      .populate("followers", "firstName lastName profilePicture")
+      .populate("followings", "firstName lastName profilePicture")
+      .exec()
+
+    if (!user) {
+      return res.status(404).json("User not found")
+    }
+
+    const posts = await Post.find({ user: userId })
+
+    const userData = {
+      _id: user._id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      profilePicture: user.profilePicture,
+      country: user.country,
+      followers: user.followers,
+      followings: user.followings,
+      bio: user.bio,
+    }
+
+    const userPosts = {
+      user: userData,
+      posts: posts,
+    }
+
+    res.status(200).json(userPosts)
   } catch (err) {
     res.status(500).json(err)
   }
 }
+
 //get timeline posts
 const getTimeline = async (req, res) => {
+  console.log("rendered")
   try {
     const currentUser = await User.findById(req.user.id)
-    const userPosts = await Post.find({ user: req.user.id })
+    const userPosts = await Post.find({ user: req.user.id }).populate(
+      "user",
+      "firstName lastName profilePicture"
+    )
     const friendPosts = await Promise.all(
       currentUser.followings.map((friendId) => {
-        return Post.find({ user: friendId })
+        return Post.find({ user: friendId }).populate(
+          "user",
+          "firstName lastName profilePicture"
+        )
       })
     )
+    console.log(userPosts.concat(...friendPosts))
     res.status(200).json(userPosts.concat(...friendPosts))
   } catch (err) {
     res.status(500).json(err)
@@ -128,44 +215,34 @@ const likeAndDislikePost = asyncHandler(async (req, res) => {
   try {
     if (!post.likes.includes(req.user.id)) {
       await post.updateOne({ $push: { likes: req.user.id } })
-      res.status(200).json("The post has been liked")
+      await post.updateOne({ isLiked: true })
+      const updatedPost = await Post.findById(req.params.id)
+      res.status(200).json({ message: "Liked", post: updatedPost })
     } else {
       await post.updateOne({ $pull: { likes: req.user.id } })
-      res.status(200).json("The post has been disliked")
+      await post.updateOne({ isLiked: false })
+      const updatedPost = await Post.findById(req.params.id)
+      res.status(200).json({ message: "Like Removed.", post: updatedPost })
     }
   } catch (err) {
     res.status(500).json(err)
   }
 })
-//comments
-const comments = async (req, res) => {
-  const post = await Post.findById(req.params.id)
 
-  console.log(post)
-  console.log(req.body)
-  try {
-    await post.updateOne({
-      $push: {
-        comments: { commentator: req.user.id, comment: req.body.comment },
-      },
-    })
-
-    res.status(200).json(post)
-  } catch (err) {
-    res.status(500).json(err)
-  }
-}
-//saved posts
-const savedPosts = async (req, res) => {
-  const post = await Post.findById(req.params.id)
+//save posts
+const savePosts = async (req, res) => {
+  const post = await Post.findById(req.params.postId)
   const user = await User.findById(req.user.id)
 
   try {
     if (!user.savedPosts.includes(post.id)) {
       await user.updateOne({ $push: { savedPosts: post.id } })
+      await post.updateOne({ isSaved: true })
       res.status(200).json("post saved successfully.")
     } else {
       await user.updateOne({ $pull: { savedPosts: post.id } })
+      await post.updateOne({ isSaved: false })
+
       res.status(200).json("post removed from saved posts.")
     }
   } catch (err) {
@@ -180,6 +257,6 @@ module.exports = {
   likeAndDislikePost,
   getTimeline,
   deletePost,
-  comments,
-  savedPosts,
+  addComment,
+  savePosts,
 }

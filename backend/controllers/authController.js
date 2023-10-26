@@ -58,6 +58,8 @@ const logInUser = asyncHandler(async (req, res) => {
       firstName: user.firstName,
       lastName: user.lastName,
       email: user.email,
+      followers: user.followers,
+      followings: user.followings,
       token: generateToken(user.id),
     })
   } else {
