@@ -11,6 +11,19 @@ const { errorHandler } = require("./middlewares/errorMiddleware")
 const port = process.env.PORT || 5000
 
 const app = express()
+const allowedOrigins = ["https://pazzion-social-media.vercel.app/"]
+
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+        callback(null, true)
+      } else {
+        callback(new Error("Not allowed by CORS"))
+      }
+    },
+  })
+)
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*")
   res.setHeader(
