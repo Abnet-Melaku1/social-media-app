@@ -295,7 +295,7 @@ export const userSlice = createSlice({
       .addCase(savePost.fulfilled, (state, action) => {
         state.savePostIsLoading = false
         state.savePostIsSuccess = true
-
+        state.userDatas = action.payload.user
         const { post, message } = action.payload
 
         // Use map() to create a new array of posts in which the matching post is updated

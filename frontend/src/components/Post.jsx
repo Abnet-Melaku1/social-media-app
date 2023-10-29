@@ -34,9 +34,21 @@ const Post = ({ post, isBlack }) => {
   console.log(post)
   const dispatch = useDispatch()
   const [isLiked, setIsLiked] = useState(false)
+  const [liked, setLiked] = useState(false)
+  const [saved, setSaved] = useState(false)
+  const { user } = useSelector((state) => state.auth)
+  const { userDatas } = useSelector((state) => state.user)
   const { commentIsError, commentIsLoading, commentIsSuccess, commentMessage } =
     useSelector((state) => state.post)
-  const LikeIcon = post?.isLiked ? AiFillHeart : AiOutlineHeart
+  console.log(user)
+  useEffect(() => {
+    setLiked(post.likes.includes(user?._id))
+  }, [user?._id, post.likes])
+  useEffect(() => {
+    setSaved(userDatas?.savedPosts.includes(post?._id))
+  }, [user._id, post.likes, userDatas?.savedPosts, post?._id])
+
+  const LikeIcon = liked ? AiFillHeart : AiOutlineHeart
   const {
     savePostIsSuccess,
 
@@ -181,7 +193,7 @@ const Post = ({ post, isBlack }) => {
             <Icon
               as={LikeIcon}
               boxSize={7}
-              color={post?.isLiked ? "red" : ""}
+              color={liked ? "red" : ""}
               _hover={{ color: "red" }}
               cursor={"pointer"}
               onClick={() => handleLikePost(post?._id)}
@@ -205,7 +217,7 @@ const Post = ({ post, isBlack }) => {
             as={FaBookmark}
             onClick={() => handleSavePost(post?._id)}
             boxSize={7}
-            fill={post?.isSaved ? "#f4845f" : "white"}
+            fill={saved ? "#f4845f" : "white"}
             cursor={"pointer"}
           />
         </Flex>

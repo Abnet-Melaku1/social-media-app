@@ -69,6 +69,7 @@ const getUser = async (req, res) => {
     profilePicture,
     followings,
     followers,
+    savedPosts,
   } = user
   res.status(200).json({
     email,
@@ -78,6 +79,7 @@ const getUser = async (req, res) => {
     profilePicture,
     followings,
     followers,
+    savedPosts,
   })
 }
 //const deleter user
@@ -162,19 +164,27 @@ const savePosts = async (req, res) => {
 
   try {
     if (!user.savedPosts.includes(post.id)) {
-      await user.updateOne({ $push: { savedPosts: post.id } })
+      const updatedUser = await user.updateOne({
+        $push: { savedPosts: post.id },
+      })
       await post.updateOne({ isSaved: true })
       const updatedPost = await Post.findById(req.params.id) // Retrieve the updated post
-      res
-        .status(200)
-        .json({ message: "Post saved successfully.", post: updatedPost })
+      res.status(200).json({
+        message: "Post saved successfully.",
+        post: updatedPost,
+        user: updatedUser,
+      })
     } else {
-      await user.updateOne({ $pull: { savedPosts: post.id } })
+      const updatedUser = await user.updateOne({
+        $pull: { savedPosts: post.id },
+      })
       await post.updateOne({ isSaved: false })
       const updatedPost = await Post.findById(req.params.id) // Retrieve the updated post
-      res
-        .status(200)
-        .json({ message: "Post removed from saved posts.", post: updatedPost })
+      res.status(200).json({
+        message: "Post removed from saved posts.",
+        post: updatedPost,
+        user: updatedUser,
+      })
     }
   } catch (err) {
     res.status(500).json(err)
