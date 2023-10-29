@@ -55,7 +55,7 @@ app.use("/api/auth", require("./routes/authRoutes"))
 app.use("/api/users", require("./routes/userRoutes"))
 app.use("/api/posts", require("./routes/postRoutes"))
 app.use(errorHandler)
-const port = process.env.PORT || 5000
+// const port = process.env.PORT || 5000
 
 app.listen(port, () => {
   console.log(`app started on server ${port}`)
