@@ -147,6 +147,7 @@ const getTimeline = async (req, res) => {
       "user",
       "firstName lastName profilePicture"
     )
+
     const friendPosts = await Promise.all(
       currentUser.followings.map((friendId) => {
         return Post.find({ user: friendId }).populate(
@@ -155,12 +156,24 @@ const getTimeline = async (req, res) => {
         )
       })
     )
-    console.log(userPosts.concat(...friendPosts))
-    res.status(200).json(userPosts.concat(...friendPosts))
+
+    const allPosts = userPosts.concat(...friendPosts)
+
+    if (allPosts.length === 0) {
+      // If the concatenated posts are empty, fetch posts from the database.
+      const allPostsFromDB = await Post.find({}).populate(
+        "user",
+        "firstName lastName profilePicture"
+      )
+      res.status(200).json(allPostsFromDB)
+    } else {
+      res.status(200).json(allPosts)
+    }
   } catch (err) {
     res.status(500).json(err)
   }
 }
+
 //get user posts
 //update post
 const updatePost = asyncHandler(async (req, res) => {
